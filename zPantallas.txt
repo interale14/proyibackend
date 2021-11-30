@@ -1,0 +1,31 @@
+
+Pantallas
+
+Login
+Signin
+Recuperación contraseña ingreso correo
+Recuperación contraseña ingreso código
+Recuperación contraseña cambio contraseña
+Pantalla principal
+Nuevo
+Búsqueda
+
+Base de datos
+
+Users
+email
+password
+lastlogin
+lastpasswordchange
+passwordexpires
+oldpassword
+roles
+
+Messages
+title
+message
+to
+date
+senddate
+user
+
