@@ -25,7 +25,7 @@ router.post('/new', async (req, res, next) =>{
 });
 
 //Get by User
-router.get('/all', async (req, res, next)=>{
+router.get('/list', async (req, res, next)=>{
   try{
     const allSwotEntries = await Swot.getAll(req.user._id);
 
