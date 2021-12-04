@@ -75,7 +75,7 @@ router.post('/passrecovery', async (req, res, next)=>{
       ].toString();
       secRecoveryCode = code.replace(/,/g,"");
       mailSender(
-        "ale-interiano@hotmail.com",
+        email,
         "Recuperación de contraseña",
         `<h1>Importante</h1><p>No comparta este código con nadie más.</p><br/><p><b>${secRecoveryCode}</b></p>`
       );

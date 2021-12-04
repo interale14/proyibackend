@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var SwotDao = require('./swot.dao');
 var Swot = new SwotDao();
+const mailSender = require("../../../utils/mailer");
 
 //New
 router.post('/new', async (req, res, next) =>{
@@ -12,8 +13,15 @@ router.post('/new', async (req, res, next) =>{
       message,
       to
     } = req.body;
-    
+    const userE = await Swot.getUser(req.user._id);
+
     const result = await Swot.addNew(title, message, to, req.user._id);
+
+    mailSender(
+      to, 
+      title, 
+      `<p>${message}</p><p>De: ${userE.email}</p><br/><br/><b>Enviado a través de: <i>Nostalgia Drive</i></b>`
+      );
 
     console.log(result);
     res.status(200).json({msg:"Agregado exitosamente"});
@@ -74,13 +82,13 @@ router.get('/getid/:id', async (req, res, next) =>{
 });
 
 //Find & Items per page
-router.get('/facet/:page/:items/:text', async (req, res, next)=> {
+router.get('/facet/:page/:items', async (req, res, next)=> {
   try {
-    let {page, items, text}  = req.params;
+    let {page, items}  = req.params;
     page = parseInt(page) || 1;
     items = parseInt(items) || 10;
 
-    const swots = await Swot.getByFacet(text, page, items, req.user._id);
+    const swots = await Swot.getByFacet('', page, items, req.user._id);
 
     return res.status(200).json(swots);
   } catch (ex) {

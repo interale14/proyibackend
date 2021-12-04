@@ -6,7 +6,6 @@ const passportJWT = require('passport-jwt');
 const extractJWT = passportJWT.ExtractJwt;
 const strategyJWT = passportJWT.Strategy;
 
-const cors = require('cors');
 
 passport.use(
   new strategyJWT(
@@ -19,22 +18,6 @@ passport.use(
     }
   )
 );
-
-var corsOptions = {
-  origin: 'http://localhost:3000',
-  optionsSuccessStatus: 200
-}
-
-var whitelist = ['http://localhost:3001']
-var corsOptionsDelegate = function (req, callback) {
-  var corsOptions;
-  if (whitelist.indexOf(req.header('Origin')) !== -1) {
-    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
-  } else {
-    corsOptions = { origin: false } // disable CORS for this request
-  }
-  callback(null, corsOptions) // callback expects two parameters: error and options
-}
 
 const jstMiddleware = passport.authenticate('jwt', {session:false});
 
@@ -50,7 +33,7 @@ router.get('/', (req, res, next)=>{
 );
 
 router.use('/swot', jstMiddleware, swotRouter);
-router.use('/sec', cors(corsOptionsDelegate), secRouter);
+router.use('/sec', secRouter);
 
 
 /*

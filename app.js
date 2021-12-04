@@ -9,6 +9,18 @@ var indexRouter = require('./routes/index');
 //var usersRouter = require('./routes/users');
 var apiRouter = require('./routes/api/index');
 
+const cors = require('cors');
+var whitelist = ['http://localhost:3001']
+var corsOptionsDelegate = function (req, callback) {
+  var corsOptions;
+  if (whitelist.indexOf(req.header('Origin')) !== -1) {
+    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+  } else {
+    corsOptions = { origin: false } // disable CORS for this request
+  }
+  callback(null, corsOptions) // callback expects two parameters: error and options
+}
+
 var app = express();
 
 // view engine setup
@@ -24,7 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 //app.use('/users', usersRouter);
-app.use('/api', apiRouter);
+app.use('/api', cors(corsOptionsDelegate), apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -3,6 +3,7 @@ var ObjectID = require('mongodb').ObjectId;
 var _db;
 class Swot{
   swotColl =null;
+  usersColl=null;
   constructor(){
     this.initModel();
   }
@@ -10,6 +11,7 @@ class Swot{
      try {
       _db = await conn.getDB();
        this.swotColl = await _db.collection("messages");
+       this.usersColl = await _db.collection("users");
     }catch(ex){
       console.log(ex);
       process.exit(1);
@@ -30,7 +32,14 @@ class Swot{
     return result;
   }
 
-  //Get by user
+  //Get user
+  async getUser(id){
+    const filter = {"_id": new ObjectID(id)}
+    let result = await this.usersColl.findOne(filter);
+    return result;
+  }
+
+  //Get All by user
   async getAll(id){
     const filter = {"user": id}
     let swots = await this.swotColl.find(filter);
@@ -64,6 +73,7 @@ class Swot{
     
     let cursor = await this.swotColl.find(filter);
     let docsMatched = await cursor.count();
+//    cursor.sort({date:1});
     cursor.skip((itemsPerPage * (page - 1)));
     cursor.limit(itemsPerPage);
     let documents = await cursor.toArray();
